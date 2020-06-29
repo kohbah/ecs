@@ -42,6 +42,7 @@ pipeline {
                     image: "http://10.0.1.113:8081/artifactory + '/springboot:latest'",
                
                     // On Linux can be omitted or null
+                    host: "10.0.1.113"
                     targetRepo: 'docker-local',
                     // Attach custom properties to the published artifacts:
                     properties: 'project-name=docker1;status=stable'
