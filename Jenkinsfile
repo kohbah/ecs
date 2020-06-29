@@ -82,18 +82,5 @@ pipeline {
                 )
          }
      }
-
-     post {
-      always {
-         echo 'deleting the current directory'
-         deleteDir()
-         echo 'deleting @tmp directory'
-         dir("${workspace}@tmp") {
-             deleteDir()
-         }
-      }
-    }
-
  }
-
 }
