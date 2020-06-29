@@ -31,16 +31,12 @@ pipeline {
         steps {
             rtDockerPush(
                 serverId: "jfrog",
-                image: "http://10.0.1.113:8081/artifactory + '/spring-boot-websocket-chat-demo:latest'",
-                // Host:
-                // On OSX: 'tcp://127.0.0.1:1234'
+                image: "http://10.0.1.113:8081/docker-local/spring-boot-websocket-chat-demo",
+                host: 'tcp://127.0.0.1:1234'
                 // On Linux can be omitted or null
-                targetRepo: 'docker-local',
+                targetRepo: 'docker-repo',
                 // Attach custom properties to the published artifacts:
-                properties: 'project-name=docker1;status=stable',
-                // If the build name and build number are not set here, the current job name and number will be used:
-                buildName: "my-first-build",
-                buildNumber: "1"
+                properties: 'project-name=docker1;status=stable'
             )
 
             }
