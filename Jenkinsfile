@@ -39,7 +39,7 @@ pipeline {
         stage ('Push image to Artifactory') {
             steps {
                 rtDockerPush(
-                    serverId: "ARTIFACTORY_SERVER",
+                    serverId: "jfrog",
                     image: ARTIFACTORY_DOCKER_REGISTRY + '/hello-world:latest',
                     targetRepo: 'docker-local',
                     // Attach custom properties to the published artifacts:
