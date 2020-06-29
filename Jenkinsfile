@@ -21,13 +21,12 @@ pipeline {
                 sh 'mvn -Dmaven.test.failure.ignore=true install' 
             }
        }
-       stage('Build image') {
-           steps{
-                script {
-                  dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                }
-              }
-            }
+       stage("Docker build") {
+             steps {
+
+                  sh "docker build -t sprintboot:latest ."
+             }
+        }
 
         stage ('docker push') {
         steps {
