@@ -28,21 +28,32 @@ pipeline {
                 sh 'mvn clean package' 
             }
        }
-       stage ('Add properties') {
-            // Attach custom properties to the published artifacts:
-            rtDocker.addProperty("project-name", "docker1").addProperty("status", "stable")
+        stage ('Build docker image') {
+            steps {
+                script {
+                    docker.build(ARTIFACTORY_DOCKER_REGISTRY + '/hello-world:latest')
+                }
+            }
         }
 
-       stage ('Build docker image') {
-            docker.build(ARTIFACTORY_DOCKER_REGISTRY + '/sprint:latest')
+        stage ('Push image to Artifactory') {
+            steps {
+                rtDockerPush(
+                    serverId: "ARTIFACTORY_SERVER",
+                    image: ARTIFACTORY_DOCKER_REGISTRY + '/hello-world:latest',
+                    targetRepo: 'docker-local',
+                    // Attach custom properties to the published artifacts:
+                    properties: 'project-name=docker1;status=stable'
+                )
+            }
         }
 
-       stage ('Push image to Artifactory') {
-            buildInfo = rtDocker.push ARTIFACTORY_DOCKER_REGISTRY + '/spring:latest', 'docker-local'
-        }
-
-       stage ('Publish build info') {
-            server.publishBuildInfo buildInfo
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "jfrog"
+                )
+            }
         }
      }
 }
