@@ -33,7 +33,7 @@ pipeline {
         stage ('Build docker image') {
             steps {
                 script {
-                    docker.build('10.0.1.113:8081/sprintboot:latest')
+                    docker.build('10.0.1.113:8081/remote/sprintboot:latest')
                 }
             }
         }
