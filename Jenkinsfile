@@ -33,7 +33,7 @@ pipeline {
         stage ('Build docker image') {
             steps {
                 script {
-                    docker.build('http://10.0.1.113:8081/artifactory/hello-world:latest')
+                    docker.build('hello-world:latest')
                 }
             }
         }
