@@ -34,11 +34,7 @@ pipeline {
             steps {
                 rtMavenRun (
                     pom: 'pom.xml',
-                    goals: 'clean install',
-                    deployerId: "maven_deployer",
-                    resolverId: "maven_resolver",
-                    buildName: 'maven_app',
-                    buildNumber: '0.0.1'
+                    goals: 'clean install'
               )
             }
         }
