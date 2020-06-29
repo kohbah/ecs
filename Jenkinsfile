@@ -33,7 +33,7 @@ pipeline {
         stage ('Build docker image') {
             steps {
                 script {
-                    docker.build('hello-world:latest')
+                    docker.build('10.0.1.113:8081/dockerrepo/hello-world:latest')
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
             steps {
                 rtDockerPush(
                     serverId: "jfrog",
-                    image: 'hello-world:latest',
+                    image: '10.0.1.113:8081/dockerrepo/hello-world:latest',
                     targetRepo: 'dockerrepo',
                     // Attach custom properties to the published artifacts:
                     properties: 'project-name=docker1;status=stable'
