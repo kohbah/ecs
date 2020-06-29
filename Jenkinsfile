@@ -12,6 +12,13 @@ pipeline {
             }
         }
          
+
+       stage ('Build') {
+            steps {
+                sh 'mvn clean package' 
+            }
+       }
+         
         stage ('Artifactory configuration') {
             steps {
                 rtServer (
@@ -22,12 +29,7 @@ pipeline {
                 )
             }
         }
-
-       stage ('Build') {
-            steps {
-                sh 'mvn clean package' 
-            }
-       }
+         
         stage ('Build docker image') {
             steps {
                 script {
