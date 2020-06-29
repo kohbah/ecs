@@ -3,18 +3,7 @@ pipeline {
     tools {
         maven 'maven'
         jdk 'java'
-    }
-
-    stages {
-
-        stage('build && SonarQube analysis') {
-            steps {
-                withSonarQubeEnv('sonar') {
-                        sh 'mvn clean package sonar:sonar'
-                }
-            }
         }
-
         stage ('Artifactory configuration') {
             steps {
                 rtServer (
@@ -52,29 +41,49 @@ pipeline {
               )
             }
         }
-        stage ("publish to artifactory") {
+    
+
+       stage('Build image') {
             steps {
-                timeout(time: 2, unit: "MINUTES") {
-                    input message: 'do you want to publish this build to artifactory server?', ok: 'Yes'
-             }
+                echo 'Starting to build docker image'
+
+                script {
+                    def customImage = docker.build("my-image:${env.BUILD_ID}")
+                    customImage.push()
+                }
             }
-        }
-        stage ('Publish build info') {
+         }
+         
+        stage ('docker push') {
+        steps {
+            rtDockerPush(
+                serverId: "jfrog",
+                image: "http://10.0.1.113:8081/artifactory/sprintboot:latest",
+                // Host:
+                // On OSX: 'tcp://127.0.0.1:1234'
+                // On Linux can be omitted or null
+                host: "tcp://127.0.0.1:1234",
+                targetRepo: 'docker-local',
+                // Attach custom properties to the published artifacts:
+                properties: 'project-name=docker1;status=stable',
+                // If the build name and build number are not set here, the current job name and number will be used:
+                buildName: "my-first-build",
+                buildNumber: "1"
+            )
+ 
+            }
+         }
+
+         stage ('publish docker image') {
             steps {
                 rtPublishBuildInfo (
-                    serverId: "jfrog",
-                    buildName: 'maven_app',
-                    buildNumber: '0.0.1'
+                    serverId: "jfrog"
                 )
             }
         }
-        stage ('Deploy') {
-            steps{
-              sshPublisher(publishers: [sshPublisherDesc(configName: 'application', sshCredentials: [encryptedPassphrase: '{AQAAABAAAAAQ7DGcMX9bver+mzFryZxeLC8Tx82oB/olkQbqqg4bwYQ=}', key: '', keyPath: '', username: 'jenkins'], transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'java -jar /home/jenkins/app01/hello/my-app-1.0-SNAPSHOT.jar', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/app01/hello', remoteDirectorySDF: false, removePrefix: 'target', sourceFiles: '**/*.jar')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])            }
-        }
-    }
-    post {
-        always {
+  
+         post {
+          always {
              echo 'deleting the current directory'
              deleteDir()
              echo 'deleting @tmp directory'
@@ -82,4 +91,4 @@ pipeline {
                  deleteDir()
                  }
             }
-    }
+      }
