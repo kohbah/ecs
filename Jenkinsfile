@@ -59,7 +59,7 @@ pipeline {
         steps {
             rtDockerPush(
                 serverId: "jfrog",
-                image: "http://10.0.1.113:8081/artifactory/sprintboot:latest",
+                image: http://10.0.1.113:8081/artifactory + '/sprintboot:latest',
                 // Host:
                 // On OSX: 'tcp://127.0.0.1:1234'
                 // On Linux can be omitted or null
