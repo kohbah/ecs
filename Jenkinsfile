@@ -13,32 +13,13 @@ pipeline {
                     username: 'admin',
                     password: 'password'
                 )
-
-                rtMavenDeployer (
-                    id: "maven_deployer",
-                    serverId: "jfrog",
-                    releaseRepo: "libs-release-local",
-                    snapshotRepo: "libs-snapshot-local"
-                )
-
-                rtMavenResolver (
-                    id: "maven_resolver",
-                    serverId: "jfrog",
-                    releaseRepo: "libs-release",
-                    snapshotRepo: "libs-snapshot"
-                )
             }
         }
 
-        stage ('Exec Maven') {
+       stage ('Build') {
             steps {
-                rtMavenRun (
-                    pom: 'pom.xml',
-                    goals: 'clean install'
-              )
+                sh 'mvn -Dmaven.test.failure.ignore=true install' 
             }
-        }
-
 
        stage('Build image') {
            steps{
