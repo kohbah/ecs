@@ -43,7 +43,7 @@ pipeline {
                 rtDockerPush(
                     serverId: "jfrog",
                     image: 'hello-world:latest',
-                    targetRepo: 'docker-local',
+                    targetRepo: 'dockerrepo',
                     // Attach custom properties to the published artifacts:
                     properties: 'project-name=docker1;status=stable'
                 )
