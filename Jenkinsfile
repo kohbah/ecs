@@ -4,6 +4,7 @@ pipeline {
         maven 'maven'
         jdk 'java'
         }
+     stages {
         stage ('Artifactory configuration') {
             steps {
                 rtServer (
@@ -12,14 +13,14 @@ pipeline {
                     username: 'admin',
                     password: 'password'
                 )
-    
+
                 rtMavenDeployer (
                     id: "maven_deployer",
                     serverId: "jfrog",
                     releaseRepo: "libs-release-local",
                     snapshotRepo: "libs-snapshot-local"
                 )
-    
+
                 rtMavenResolver (
                     id: "maven_resolver",
                     serverId: "jfrog",
@@ -28,7 +29,7 @@ pipeline {
                 )
             }
         }
-    
+
         stage ('Exec Maven') {
             steps {
                 rtMavenRun (
@@ -41,19 +42,19 @@ pipeline {
               )
             }
         }
-    
-    
+
+
        stage('Build image') {
             steps {
                 echo 'Starting to build docker image'
-    
+
                 script {
                     def customImage = docker.build("my-image:${env.BUILD_ID}")
                     customImage.push()
                 }
             }
          }
-    
+
         stage ('docker push') {
         steps {
             rtDockerPush(
@@ -70,10 +71,10 @@ pipeline {
                 buildName: "my-first-build",
                 buildNumber: "1"
             )
-    
+
             }
          }
-    
+
          stage ('publish docker image') {
             steps {
                 rtPublishBuildInfo (
@@ -81,7 +82,7 @@ pipeline {
                 )
             }
         }
-    
+
          post {
           always {
              echo 'deleting the current directory'
@@ -89,7 +90,10 @@ pipeline {
              echo 'deleting @tmp directory'
              dir("${workspace}@tmp") {
                  deleteDir()
-                  }
+                }
             }
         }
+        
+     }
+       
     }
