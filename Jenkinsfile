@@ -42,7 +42,7 @@ pipeline {
                     image: "http://10.0.1.113:8081/docker-local/spring-boot-websocket-chat-demo",
                
                     // On Linux can be omitted or null
-                    host: 10.0.1.113,
+                    host: HOST_NAME,
                     targetRepo: 'docker-local',
                     // Attach custom properties to the published artifacts:
                     properties: 'project-name=docker1;status=stable'
