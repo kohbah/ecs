@@ -34,7 +34,7 @@ pipeline {
         }
 
        stage ('Build docker image') {
-            docker.build(ARTIFACTORY_DOCKER_REGISTRY + '/sprint:latest', .)
+            docker.build(ARTIFACTORY_DOCKER_REGISTRY + '/sprint:latest')
         }
 
        stage ('Push image to Artifactory') {
