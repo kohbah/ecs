@@ -17,13 +17,13 @@ pipeline {
 
        stage ('Build') {
             steps {
-                sh 'mvn -Dmaven.test.failure.ignore=true install' 
+                sh 'mvn clean package' 
             }
        }
        stage("Docker build") {
              steps {
 
-                  sh "docker build -t sprintboot:latest ."
+                  sh "docker build -t spring-boot-websocket-chat-demo ."
              }
         }
 
