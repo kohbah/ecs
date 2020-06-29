@@ -37,6 +37,8 @@ pipeline {
                     targetRepo: 'docker-local',
                     // Attach custom properties to the published artifacts:
                     properties: 'project-name=docker1;status=stable'
+                    buildName: 'my-build-name',
+                    buildNumber: '17'
                  )
 
                 }
