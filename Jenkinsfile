@@ -31,15 +31,15 @@ pipeline {
        stage("Docker build") {
              steps {
 
-                  sh "docker build -t spring-boot-websocket-chat-demo ."
+                  sh "docker build -t springboot:latest ."
              }
         }
-
+        
         stage ('docker push') {
             steps {
                 rtDockerPush(
                     serverId: "jfrog",
-                    image: "http://10.0.1.113:8081/docker-local/spring-boot-websocket-chat-demo",
+                    image: "http://10.0.1.113:8081/artifactory + '/springboot:latest'",
                
                     // On Linux can be omitted or null
                     targetRepo: 'docker-local',
