@@ -31,7 +31,7 @@ pipeline {
        stage("Docker build") {
              steps {
                script {
-                 docker.build(ARTIFACTORY_DOCKER_REGISTRY + '/hello-world:latest')
+                 docker.build(ARTIFACTORY_DOCKER_REGISTRY + '/springboot:latest')
                 }
             }
         }       
