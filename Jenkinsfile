@@ -5,6 +5,13 @@ pipeline {
         jdk 'java'
         }
      stages {
+
+        stage ('Clone') {
+             steps {
+                 git branch: 'master', url: "https://github.com/kohbah/ecs.git"
+            }
+        }
+         
         stage ('Artifactory configuration') {
             steps {
                 rtServer (
@@ -33,8 +40,9 @@ pipeline {
                 rtDockerPush(
                     serverId: "jfrog",
                     image: "http://10.0.1.113:8081/docker-local/spring-boot-websocket-chat-demo",
-                    host: 'tcp://127.0.0.1:1234',
+               
                     // On Linux can be omitted or null
+                    host: 10.0.1.113,
                     targetRepo: 'docker-local',
                     // Attach custom properties to the published artifacts:
                     properties: 'project-name=docker1;status=stable'
