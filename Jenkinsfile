@@ -39,7 +39,7 @@ pipeline {
             steps {
                 rtDockerPush(
                     serverId: "jfrog",
-                    image: "http://10.0.1.113:8081/artifactory + '/springboot:latest'",
+                    image: "http://10.0.1.113:8081/artifactory + '/springboot:latest'"
 
                  )
 
