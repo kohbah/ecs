@@ -42,8 +42,8 @@ pipeline {
             steps {
                 rtDockerPush(
                     serverId: "jfrog",
-                    image: '10.0.1.113:8081/docker-remote/sprintboot:latest',
-                    targetRepo: 'docker-remote',
+                    image: '10.0.1.113:8081/remote/sprintboot:latest',
+                    targetRepo: 'remote',
                     // Attach custom properties to the published artifacts:
                     properties: 'project-name=docker1;status=stable'
                 )
