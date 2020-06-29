@@ -8,7 +8,7 @@ pipeline {
 
         stage ('Clone') {
              steps {
-                 git branch: 'master', url: "https://github.com/kohbah/ecs.git"
+                 git url: "https://github.com/kohbah/ecs.git"
             }
         }
          
@@ -28,33 +28,21 @@ pipeline {
                 sh 'mvn clean package' 
             }
        }
-       stage("Docker build") {
-             steps {
-               script {
-                 docker.build(ARTIFACTORY_DOCKER_REGISTRY + '/springboot:latest')
-                }
-            }
-        }       
-                
-        stage ('docker push') {
-            steps {
-                rtDockerPush(
-                    serverId: "jfrog",
-                    image: ARTIFACTORY_DOCKER_REGISTRY + '/springboot:latest',
-                    targetRepo: 'docker-local',
-                    // Attach custom properties to the published artifacts:
-                    properties: 'project-name=docker1;status=stable'
-                    )
+       stage ('Add properties') {
+            // Attach custom properties to the published artifacts:
+            rtDocker.addProperty("project-name", "docker1").addProperty("status", "stable")
+        }
 
-             }
-         }
+       stage ('Build docker image') {
+            docker.build(ARTIFACTORY_DOCKER_REGISTRY + '/sprint:latest', .)
+        }
 
-         stage ('publish docker image') {
-            steps {
-                rtPublishBuildInfo (
-                    serverId: "jfrog"
-                )
-         }
+       stage ('Push image to Artifactory') {
+            buildInfo = rtDocker.push ARTIFACTORY_DOCKER_REGISTRY + '/spring:latest', 'docker-local'
+        }
+
+       stage ('Publish build info') {
+            server.publishBuildInfo buildInfo
+        }
      }
- }
 }
