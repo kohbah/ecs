@@ -20,7 +20,7 @@ pipeline {
             steps {
                 sh 'mvn -Dmaven.test.failure.ignore=true install' 
             }
-
+       }
        stage('Build image') {
            steps{
                 script {
