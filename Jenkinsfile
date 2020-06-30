@@ -30,16 +30,19 @@ pipeline {
         stage ('publish ') {
             steps {
                 script {
-                    shouldPublish = input message: 'Publish Containers?', parameters: [[$class: 'ChoiceParameterDefinition', choices: 'yes\nno', description: '', name: 'Deploy']]
-                    if(shouldPublish == "yes") {
-                     echo "Publishing docker containers"
-                     sh "\$(aws ecr get-login)"
-
                      sh "docker tag sprintboot:latest 877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest"
                      sh "docker push 877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest"
                     }        
                 }
             }
         }
+         
+     post
+        {
+            always
+            {
+                sh "docker rmi 877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest"
+            }
+        }            
     }
 }
