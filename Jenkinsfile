@@ -30,7 +30,7 @@ pipeline {
        stage ('ecr login') {
             steps {
                 script {
-                    sh ("eval \$(aws ecr get-login --no-include-email | sed 's|https://||')")
+                    sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 877510168756.dkr.ecr.us-east-1.amazonaws.com"
                 }
             }
         }  
