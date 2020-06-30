@@ -30,7 +30,6 @@ pipeline {
         stage ('publish ') {
             steps {
                 script {
-                     sh "docker tag sprintboot:latest 877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest"
                      sh "docker push 877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest"
                     }        
                 }
