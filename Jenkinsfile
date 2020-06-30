@@ -30,7 +30,7 @@ pipeline {
         stage ('publish ') {
             steps {
                 script {
-                     sh "docker push 877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest"
+                     sh "docker push https://877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest"
                     }        
                 }
             }
