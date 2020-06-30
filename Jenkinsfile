@@ -19,43 +19,27 @@ pipeline {
             }
        }
          
-        stage ('Artifactory configuration') {
+        stage ('Build docker image') {
             steps {
-                rtServer (
-                    id: "jfrog",
-                    url: 'http://10.0.1.113:8081/artifactory',
-                    username: 'admin',
-                    password: 'APAqMjUbMocmeiNBRhzi49byFi8'
-                )
+                script {
+                    docker.build('877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest')
+                }
             }
         }
          
         stage ('Build docker image') {
             steps {
                 script {
-                    docker.build('10.0.1.113:8081/sprintboot:latest')
+                    shouldPublish = input message: 'Publish Containers?', parameters: [[$class: 'ChoiceParameterDefinition', choices: 'yes\nno', description: '', name: 'Deploy']]
+                    if(shouldPublish == "yes") {
+                     echo "Publishing docker containers"
+                     sh "\$(aws ecr get-login)"
+
+                     sh "docker tag sprintboot:latest 877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest"
+                     sh "docker push 877510168756.dkr.ecr.us-east-1.amazonaws.com/sprintboot:latest"
                 }
             }
         }
 
-        stage ('Push image to Artifactory') {
-            steps {
-                rtDockerPush(
-                    serverId: "jfrog",
-                    image: '10.0.1.113:8081/dockerrepo/sprintboot:latest',
-                    targetRepo: 'dockerrepo',
-                    // Attach custom properties to the published artifacts:
-                    properties: 'project-name=docker1;status=stable'
-                )
-            }
-        }
-
-        stage ('Publish build info') {
-            steps {
-                rtPublishBuildInfo (
-                    serverId: "jfrog"
-                )
-            }
-        }
      }
 }
