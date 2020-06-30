@@ -27,7 +27,7 @@ pipeline {
             }
         }
          
-        stage ('Build docker image') {
+        stage ('publish ') {
             steps {
                 script {
                     shouldPublish = input message: 'Publish Containers?', parameters: [[$class: 'ChoiceParameterDefinition', choices: 'yes\nno', description: '', name: 'Deploy']]
