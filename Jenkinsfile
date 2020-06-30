@@ -27,6 +27,17 @@ pipeline {
             }
         }
          
+        stage("ECR Login") {
+            steps {
+                withAWS(credentials:'get-login') {
+                    script {
+                        def login = ecrLogin()
+                        sh "${login}"
+                    }
+                }
+            }
+        }
+         
         stage ('publish ') {
             steps {
                 script {
